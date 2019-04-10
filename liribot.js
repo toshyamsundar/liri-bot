@@ -1,6 +1,10 @@
 require("dotenv").config();
-var keys = require("./keys");
-var fs = require("fs");
+let keys = require("./keys");
+let fs = require("fs");
+
+let inputArguments = process.argv.slice(2);
+let inputCommand = inputArguments[0];
+let inputSearchString = inputArguments.splice(1).join(" ");
 
 fs.readFile("./random.txt", "utf8", function(error, data) {
   if (error) {
@@ -13,3 +17,20 @@ fs.readFile("./random.txt", "utf8", function(error, data) {
     });
   }
 });
+
+switch (inputCommand) {
+  case "concert-this":
+    console.log("Bands In Town");
+    break;
+  case "spotify-this-song":
+    console.log("Spotify");
+    break;
+  case "movie-this":
+    console.log("OMDB API");
+    break;
+  case "do-what-it-says":
+    console.log("Just something random");
+    break;
+  default:
+    console.log("Nothing in here");
+}
