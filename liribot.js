@@ -39,28 +39,69 @@ let getBandsInTown = inputSearchString => {
         console.log(`-------------------------------------------------------`);
       });
     })
-    .catch(function(err) {
-      console.log(`Error: ${err}`);
+    .catch(function(error) {
+      console.log(`Error occurred: ${error}`);
     });
 };
 
 let getSpotifyDetails = inputSearchString => {
-  spotify.search({ type: "track", query: inputSearchString, limit: 5 }, function(err, response) {
-    if (err) {
-      return console.log("Error occurred: " + err);
+  if (!inputSearchString) {
+    inputSearchString = "The Sign";
+  }
+
+  spotify.search({ type: "track", query: inputSearchString, limit: 5 }, function(error, response) {
+    if (error) {
+      return console.log(`Error occurred: ${error}`);
     }
+
     response.tracks.items.forEach(song => {
       let artistNames = [];
       console.log(`Song: ${song.name}`);
       console.log(`Album: ${song.album.name}`);
+
       song.artists.forEach(artist => {
         artistNames.push(artist.name);
       });
+
       console.log(`Artists: ${artistNames}`);
       console.log(`Preview: ${song.preview_url}`);
       console.log(`-------------------------------------------------------`);
     });
   });
+};
+
+let getMovieDetails = inputSearchString => {
+  if (!inputSearchString) {
+    inputSearchString = "Mr. Nobody";
+  }
+
+  let queryString = `https://www.omdbapi.com/?t=${inputSearchString}&y=&plot=short&apikey=trilogy`;
+
+  axios
+    .get(queryString)
+    .then(function(response) {
+      console.log(`Title: ${response.data.Title}`);
+      console.log(`Year Released: ${response.data.Year}`);
+
+      let imdbRating = response.data.Ratings.filter(rating => {
+        return rating.Source === "Internet Movie Database";
+      });
+
+      console.log(`IMDB Rating: ${imdbRating[0].Value}`);
+
+      let rtRating = response.data.Ratings.filter(rating => {
+        return rating.Source === "Rotten Tomatoes";
+      });
+
+      console.log(`RT Rating: ${rtRating[0].Value}`);
+      console.log(`Country: ${response.data.Country}`);
+      console.log(`Language: ${response.data.Language}`);
+      console.log(`Actors: ${response.data.Actors}`);
+      console.log(`Plot: ${response.data.Plot}`);
+    })
+    .catch(function(error) {
+      console.log(`Error occurred: ${error}`);
+    });
 };
 
 switch (inputCommand) {
@@ -71,7 +112,7 @@ switch (inputCommand) {
     getSpotifyDetails(inputSearchString);
     break;
   case "movie-this":
-    console.log("OMDB API");
+    getMovieDetails(inputSearchString);
     break;
   case "do-what-it-says":
     console.log("Just something random");
