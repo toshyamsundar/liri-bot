@@ -1,1 +1,3 @@
-spotify-this-song,"Right Here Waiting"
+spotify-this-song,Right Here Waiting
+concert-this,Ariana Grande
+movie-this,The Shawshank Redemption
